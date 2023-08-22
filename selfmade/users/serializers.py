@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 class RegisterSerializer(serializers.ModelSerializer):
     
     password2 = serializers.CharField(write_only=True, required=True)
-    interests = serializers.PrimaryKeyRelatedField(queryset=Interest.objects.all(), many=True)
+    interests = serializers.SlugRelatedField(queryset=Interest.objects.all(), many=True, slug_field="name")
 
 
     class Meta:
@@ -20,6 +20,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             "last_name",
             "interests"
         ]
+        extra_kwargs = {"first_name": {"required": False},
+                        "last_name": {"required": False},
+                        }
     
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
@@ -30,10 +33,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = MyUser(
             username=validated_data["username"],
             email=validated_data["email"],
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
-            
         )
+        if validated_data.get("first_name"):
+            user.first_name = validated_data.get("first_name")
+        if validated_data.get("last_name"):
+            user.first_name = validated_data.get("last_name") 
         user.set_password(validated_data["password"])
         user.save()
         user.interests.set(validated_data["interests"])
@@ -42,7 +46,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     
-    interests = serializers.PrimaryKeyRelatedField(queryset=Interest.objects.all(), many=True, required=False)
+    interests = serializers.SlugRelatedField(queryset=Interest.objects.all(), many=True, required=False, slug_field="name")
     email = serializers.EmailField(required=False)
     username = serializers.CharField(required=False)
 

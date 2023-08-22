@@ -41,7 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    'rest_framework'
+    'rest_framework',
+    'ckeditor',
+    'ckeditor_uploader',
+    'taggit',
+    'taggit_serializer',
+    'posts',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'selfmaded.urls'
+ROOT_URLCONF = 'selfmade.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'selfmaded.wsgi.application'
+WSGI_APPLICATION = 'selfmade.wsgi.application'
 
 
 # Database
@@ -130,6 +135,8 @@ AUTH_USER_MODEL = 'users.MyUser'
 
 STATIC_URL = 'static/'
 
+CKEDITOR_UPLOAD_PATH = "post_images/"
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
@@ -147,6 +154,10 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+
+    'PAGE_SIZE': 7,
 }
 
 
@@ -155,3 +166,36 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "UPDATE_LAST_LOGIN": True,
 }
+
+
+####################################
+    ##  CKEDITOR CONFIGURATION ##
+####################################
+
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_CONFIGS = {
+    "default": {
+        "removePlugins": "stylesheetparser",
+        'allowedContent': True,
+        'toolbar_Full': [
+        ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ],
+        ['Image', 'Flash', 'Table', 'HorizontalRule'],
+        ['TextColor', 'BGColor'],
+        ['Smiley','sourcearea', 'SpecialChar'],
+        [ 'Link', 'Unlink', 'Anchor' ],
+        [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ],
+        [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ],
+        [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],
+        [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ],
+        [ 'Maximize', 'ShowBlocks' ]
+    ],
+    }
+}
+
+###################################
+
+
+TAGGIT_CASE_INSENSITIVE = True
